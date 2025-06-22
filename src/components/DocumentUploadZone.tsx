@@ -35,16 +35,16 @@ const DocumentUploadZone = ({ onUpload }) => {
 
   return (
     <Card className="shadow-sm border-0 bg-white rounded-xl">
-      <CardHeader className="bg-gradient-to-r from-blue-700 to-blue-600 text-white rounded-t-xl">
-        <CardTitle className="text-lg font-semibold">
+      <CardHeader className="bg-gradient-to-r from-blue-700 to-blue-600 text-white rounded-t-xl py-3">
+        <CardTitle className="text-base font-semibold">
           Upload Documents
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-6">
+      <CardContent className="p-4">
         <div
           onDrop={handleDrop}
           onDragOver={(e) => e.preventDefault()}
-          className="border-2 border-dashed border-blue-300 rounded-xl p-8 text-center hover:border-blue-500 hover:bg-blue-50 transition-all duration-200 cursor-pointer"
+          className="border-2 border-dashed border-blue-300 rounded-xl p-4 text-center hover:border-blue-500 hover:bg-blue-50 transition-all duration-200 cursor-pointer"
         >
           <input
             type="file"
@@ -55,8 +55,8 @@ const DocumentUploadZone = ({ onUpload }) => {
             id="doc-upload"
           />
           <label htmlFor="doc-upload" className="cursor-pointer">
-            <FileText className="w-10 h-10 mx-auto mb-3 text-blue-500" />
-            <p className="text-sm text-gray-700 mb-1 font-medium">
+            <FileText className="w-6 h-6 mx-auto mb-2 text-blue-500" />
+            <p className="text-xs text-gray-700 mb-1 font-medium">
               Upload Contracts, GPO, or Invoice documents
             </p>
             <p className="text-xs text-gray-500">

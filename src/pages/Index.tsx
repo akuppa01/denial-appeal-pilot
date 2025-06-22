@@ -151,9 +151,9 @@ const Index = () => {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-12 gap-8 p-8">
+      <div className="grid grid-cols-12 gap-6 p-6">
         {/* Left Panel - Claims Management */}
-        <div className="col-span-7 space-y-8">
+        <div className="col-span-8 space-y-4">
           <ClaimsTable 
             claims={claimsList}
             onClaimClick={handleClaimClick}
@@ -162,7 +162,7 @@ const Index = () => {
         </div>
 
         {/* Right Panel - Document Management */}
-        <div className="col-span-5 space-y-8">
+        <div className="col-span-4 space-y-4">
           <DocumentTabs 
             contractFiles={contractFiles}
             gpoFiles={gpoFiles}
