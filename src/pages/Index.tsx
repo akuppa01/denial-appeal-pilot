@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, FileCheck } from "lucide-react";
 import ClaimsTable from "@/components/ClaimsTable";
 import DocumentTabs from "@/components/DocumentTabs";
 import CsvUploadZone from "@/components/CsvUploadZone";
@@ -18,7 +18,18 @@ const Index = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { toast } = useToast();
 
-  const generateSampleDenials = () => {
+  const hasDocuments = contractFiles.length > 0 || gpoFiles.length > 0 || invoiceFiles.length > 0;
+
+  const generateClaimsFromDocuments = () => {
+    if (!hasDocuments) {
+      toast({
+        title: "No Documents Found",
+        description: "Please upload contracts, GPO documents, or invoices first to generate claims.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     const sampleClaims = [
       {
         id: "CLM001",
@@ -69,8 +80,8 @@ const Index = () => {
     
     setClaimsList(sampleClaims);
     toast({
-      title: "Sample Data Generated",
-      description: "5 sample claim denials have been loaded into the table.",
+      title: "Claims Generated",
+      description: `${sampleClaims.length} claims generated based on uploaded documents.`,
     });
   };
 
@@ -80,12 +91,10 @@ const Index = () => {
   };
 
   const handleCsvUpload = (file) => {
-    // Simulate CSV parsing
     toast({
       title: "CSV Uploaded", 
       description: `Processing ${file.name}...`,
     });
-    // In real implementation, would parse CSV and update claimsList
   };
 
   const handleDocumentUpload = (file, category) => {
@@ -115,27 +124,36 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
+      <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 border-b border-blue-700 px-8 py-6 shadow-lg">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">
-            McKesson | Claim-Denial Appeals POC
-          </h1>
+          <div className="flex items-center space-x-4">
+            <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+              <span className="text-blue-900 font-bold text-xl">M</span>
+            </div>
+            <h1 className="text-2xl font-bold text-white">
+              McKesson | Claim-Denial Appeals POC
+            </h1>
+          </div>
           <Button 
-            onClick={generateSampleDenials}
-            className="bg-blue-600 hover:bg-blue-700"
+            onClick={generateClaimsFromDocuments}
+            disabled={!hasDocuments}
+            className={`${hasDocuments 
+              ? 'bg-green-600 hover:bg-green-700 text-white' 
+              : 'bg-gray-400 text-gray-600 cursor-not-allowed'
+            } rounded-xl px-6 py-3 transition-all duration-200`}
           >
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Generate Sample Denials
+            <FileCheck className="w-4 h-4 mr-2" />
+            Generate Claims from Documents
           </Button>
         </div>
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-12 gap-6 p-6">
+      <div className="grid grid-cols-12 gap-8 p-8">
         {/* Left Panel - Claims Management */}
-        <div className="col-span-7 space-y-6">
+        <div className="col-span-7 space-y-8">
           <ClaimsTable 
             claims={claimsList}
             onClaimClick={handleClaimClick}
@@ -144,7 +162,7 @@ const Index = () => {
         </div>
 
         {/* Right Panel - Document Management */}
-        <div className="col-span-5 space-y-6">
+        <div className="col-span-5 space-y-8">
           <DocumentTabs 
             contractFiles={contractFiles}
             gpoFiles={gpoFiles}

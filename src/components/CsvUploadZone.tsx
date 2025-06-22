@@ -1,12 +1,12 @@
 
 import React, { useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Upload, FileText } from "lucide-react";
+import { Upload } from "lucide-react";
 
 const CsvUploadZone = ({ onUpload }) => {
   const handleDrop = useCallback((e) => {
     e.preventDefault();
-    const files = Array.from(e.dataTransfer.files);
+    const files = Array.from(e.dataTransfer.files) as File[];
     const csvFile = files.find(file => file.name.endsWith('.csv'));
     
     if (csvFile) {
@@ -15,24 +15,24 @@ const CsvUploadZone = ({ onUpload }) => {
   }, [onUpload]);
 
   const handleFileInput = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0] as File;
     if (file && file.name.endsWith('.csv')) {
       onUpload(file);
     }
   };
 
   return (
-    <Card className="shadow-sm">
-      <CardHeader>
-        <CardTitle className="text-lg font-semibold text-gray-900">
+    <Card className="shadow-sm border-0 bg-white rounded-xl">
+      <CardHeader className="bg-gradient-to-r from-green-700 to-green-600 text-white rounded-t-xl">
+        <CardTitle className="text-lg font-semibold">
           Upload CSV of Claims
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-6">
         <div
           onDrop={handleDrop}
           onDragOver={(e) => e.preventDefault()}
-          className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition-colors cursor-pointer"
+          className="border-2 border-dashed border-green-300 rounded-xl p-8 text-center hover:border-green-500 hover:bg-green-50 transition-all duration-200 cursor-pointer"
         >
           <input
             type="file"
@@ -42,8 +42,8 @@ const CsvUploadZone = ({ onUpload }) => {
             id="csv-upload"
           />
           <label htmlFor="csv-upload" className="cursor-pointer">
-            <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-            <p className="text-sm text-gray-600 mb-1">
+            <Upload className="w-10 h-10 mx-auto mb-3 text-green-500" />
+            <p className="text-sm text-gray-700 mb-1 font-medium">
               Drag and drop your CSV file here, or click to browse
             </p>
             <p className="text-xs text-gray-500">

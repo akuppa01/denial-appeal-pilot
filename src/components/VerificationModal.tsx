@@ -39,6 +39,33 @@ const VerificationModal = ({ claim, isOpen, onClose }) => {
     }, 800);
   };
 
+  const generateEmailTemplate = (claim) => {
+    const template = `Subject: Chargeback Reconsideration Request – Claim ID ${claim?.id} | SKU ${claim?.ndc} | ${claim?.distributor}
+
+Dear ${claim?.distributor} Claims Team,
+
+We are writing in response to the denial of Chargeback Claim ID ${claim?.id}, citing ${claim?.reason} for contract CON-2024-${Math.floor(Math.random() * 1000)} – Tier 1 for SKU ${claim?.ndc} (Pharmaceutical Product).
+
+Upon further review, we verified that the customer was an active member of Premier GPO at the time of sale (Invoice INV-${Math.floor(Math.random() * 10000)} dated ${new Date().toLocaleDateString()}). Membership validation and eligibility confirmation are attached.
+
+We kindly request reconsideration of this chargeback submission. Supporting contract clause 4.2.1 and pricing matrix snapshot are included.
+
+Thank you for your attention, and please let us know if additional documentation is needed.
+
+Warm regards,
+
+Sarah Johnson
+Appeals Manager
+McKesson Corporation
+
+Attachments:
+- GPO Membership Verification
+- Contract Pricing Matrix
+- Invoice Documentation`;
+
+    return template;
+  };
+
   const completeVerification = () => {
     // Simulate verification results
     const isValid = Math.random() > 0.6; // 40% chance of invalid rejection
@@ -56,19 +83,7 @@ const VerificationModal = ({ claim, isOpen, onClose }) => {
         "✗ Invoice shows different quantity than claimed", 
         "✓ Payment terms properly applied"
       ],
-      emailDraft: isValid ? "" : `Dear Claims Review Team,
-
-After thorough verification against our contract repository, GPO agreements, and invoice records, we contest the denial of Claim ${claim?.id}.
-
-Our analysis reveals:
-- Contract pricing supports the claimed amount of ${claim?.amount}
-- GPO agreement explicitly covers NDC ${claim?.ndc}
-- Invoice documentation confirms proper quantities and terms
-
-We request immediate reversal of this denial and processing of the full claim amount.
-
-Best regards,
-Appeals Management Team`
+      emailDraft: isValid ? "" : generateEmailTemplate(claim)
     };
     
     setVerificationResult(result);
@@ -89,24 +104,24 @@ Appeals Management Team`
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader>
+      <DialogContent className="max-w-4xl bg-white rounded-xl border-0 shadow-2xl">
+        <DialogHeader className="bg-gradient-to-r from-blue-900 to-blue-800 text-white p-6 -m-6 mb-6 rounded-t-xl">
           <DialogTitle className="text-xl font-semibold">
             Verify Claim Legitimacy - {claim?.id}
           </DialogTitle>
         </DialogHeader>
         
-        <div className="space-y-6">
+        <div className="space-y-6 p-2">
           {/* Verification Status */}
-          <div className="text-center space-y-4">
+          <div className="text-center space-y-4 bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl">
             <div className="flex items-center justify-center space-x-2">
               <RefreshCw className={`w-5 h-5 ${verificationProgress < 100 ? 'animate-spin text-blue-600' : 'text-green-600'}`} />
-              <span className="font-medium">
+              <span className="font-medium text-gray-800">
                 Running verification against Contracts, GPO, and Invoice repositories...
               </span>
             </div>
             
-            <Progress value={verificationProgress} className="w-full" />
+            <Progress value={verificationProgress} className="w-full h-3 bg-white" />
             <p className="text-sm text-gray-600">{verificationProgress}% complete</p>
           </div>
 
@@ -115,10 +130,10 @@ Appeals Management Team`
             <div className="space-y-4">
               <div className="flex items-center justify-center">
                 <Badge 
-                  className={`text-sm px-4 py-2 ${
+                  className={`text-sm px-6 py-3 rounded-full ${
                     verificationResult.valid 
-                      ? 'bg-green-100 text-green-800' 
-                      : 'bg-red-100 text-red-800'
+                      ? 'bg-green-100 text-green-800 border-green-200' 
+                      : 'bg-red-100 text-red-800 border-red-200'
                   }`}
                 >
                   {verificationResult.valid ? (
@@ -136,12 +151,13 @@ Appeals Management Team`
               </div>
 
               {/* Verification Checklist */}
-              <div className="bg-gray-50 rounded-lg p-4">
-                <h4 className="font-medium mb-3">Verification Results:</h4>
-                <ul className="space-y-2">
+              <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                <h4 className="font-medium mb-4 text-gray-800">Verification Results:</h4>
+                <ul className="space-y-3">
                   {verificationResult.checks.map((check, index) => (
-                    <li key={index} className="text-sm">
-                      {check}
+                    <li key={index} className="text-sm flex items-center space-x-2">
+                      <span className={`w-2 h-2 rounded-full ${check.startsWith('✓') ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                      <span>{check}</span>
                     </li>
                   ))}
                 </ul>
@@ -151,17 +167,17 @@ Appeals Management Team`
 
           {/* Appeal Section */}
           {showAppeal && (
-            <div className="space-y-4">
-              <h4 className="font-medium">Appeal Draft:</h4>
+            <div className="space-y-4 bg-gradient-to-r from-orange-50 to-red-50 p-6 rounded-xl border border-orange-200">
+              <h4 className="font-medium text-gray-800">Appeal Draft:</h4>
               <Textarea
                 value={emailDraft}
                 onChange={(e) => setEmailDraft(e.target.value)}
-                rows={8}
-                className="w-full"
+                rows={12}
+                className="w-full bg-white border-orange-200 rounded-xl"
               />
               <Button 
                 onClick={sendAppeal}
-                className="w-full bg-green-600 hover:bg-green-700"
+                className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl py-3"
               >
                 <ThumbsUp className="w-4 h-4 mr-2" />
                 Approve & Send Appeal
