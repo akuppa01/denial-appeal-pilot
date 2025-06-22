@@ -3,8 +3,23 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-const ClaimsTable = ({ claims, onClaimClick }) => {
-  const getStatusColor = (status) => {
+interface Claim {
+  id: string;
+  distributor: string;
+  ndc: string;
+  reason: string;
+  amount: string;
+  status: string;
+  age: string;
+}
+
+interface ClaimsTableProps {
+  claims: Claim[];
+  onClaimClick: (claim: Claim) => void;
+}
+
+const ClaimsTable: React.FC<ClaimsTableProps> = ({ claims, onClaimClick }) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'Pending Review':
         return 'bg-yellow-100 text-yellow-800';
@@ -17,8 +32,8 @@ const ClaimsTable = ({ claims, onClaimClick }) => {
     }
   };
 
-  const getAgeColor = (age) => {
-    const days = parseInt(age.toString().replace(' days', ''));
+  const getAgeColor = (age: string) => {
+    const days = parseInt(age.replace(' days', ''), 10);
     if (days >= 5) return 'text-red-600 font-semibold';
     if (days >= 3) return 'text-orange-600 font-medium';
     return 'text-green-600';
