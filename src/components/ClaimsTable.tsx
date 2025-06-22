@@ -40,57 +40,59 @@ const ClaimsTable: React.FC<ClaimsTableProps> = ({ claims, onClaimClick }) => {
   };
 
   return (
-    <Card className="shadow-sm border-0 bg-white rounded-xl">
-      <CardHeader className="bg-gradient-to-r from-blue-900 to-blue-800 text-white rounded-t-xl">
-        <CardTitle className="text-lg font-semibold">
-          Pending Claim Denials
+    <Card className="shadow-lg border-0 bg-white rounded-2xl overflow-hidden">
+      <CardHeader className="bg-gradient-to-r from-blue-900 to-blue-800 text-white">
+        <CardTitle className="text-xl font-bold">
+          Pending Claim Denials Dashboard
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-200 bg-gray-50">
-                <th className="text-left py-4 px-6 font-medium text-gray-700">Claim ID</th>
-                <th className="text-left py-4 px-6 font-medium text-gray-700">Distributor</th>
-                <th className="text-left py-4 px-6 font-medium text-gray-700">NDC</th>
-                <th className="text-left py-4 px-6 font-medium text-gray-700">Reason</th>
-                <th className="text-left py-4 px-6 font-medium text-gray-700">Amount (USD)</th>
-                <th className="text-left py-4 px-6 font-medium text-gray-700">Status</th>
-                <th className="text-left py-4 px-6 font-medium text-gray-700">Age</th>
+              <tr className="border-b-2 border-blue-200 bg-gradient-to-r from-blue-50 to-blue-100">
+                <th className="text-left py-6 px-6 font-bold text-blue-900 text-base min-w-[120px]">Claim ID</th>
+                <th className="text-left py-6 px-6 font-bold text-blue-900 text-base min-w-[180px]">Distributor</th>
+                <th className="text-left py-6 px-6 font-bold text-blue-900 text-base min-w-[140px]">NDC</th>
+                <th className="text-left py-6 px-6 font-bold text-blue-900 text-base min-w-[220px]">Denial Reason</th>
+                <th className="text-left py-6 px-6 font-bold text-blue-900 text-base min-w-[120px]">Amount (USD)</th>
+                <th className="text-left py-6 px-6 font-bold text-blue-900 text-base min-w-[140px]">Status</th>
+                <th className="text-left py-6 px-6 font-bold text-blue-900 text-base min-w-[100px]">Age</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="bg-white">
               {claims.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="text-center py-12 text-gray-500">
-                    <div className="flex flex-col items-center space-y-3">
-                      <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-                        <span className="text-blue-600 text-2xl">📋</span>
+                  <td colSpan={7} className="text-center py-16 text-gray-500">
+                    <div className="flex flex-col items-center space-y-4">
+                      <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center">
+                        <span className="text-blue-600 text-3xl">📋</span>
                       </div>
-                      <p className="text-lg font-medium">No claims available</p>
-                      <p className="text-sm">Upload documents first, then generate claims based on document analysis</p>
+                      <p className="text-xl font-medium">No claims available</p>
+                      <p className="text-base">Upload documents first, then generate claims based on document analysis</p>
                     </div>
                   </td>
                 </tr>
               ) : (
-                claims.map((claim) => (
+                claims.map((claim, index) => (
                   <tr 
                     key={claim.id}
                     onClick={() => onClaimClick(claim)}
-                    className="border-b border-gray-100 hover:bg-blue-50 cursor-pointer transition-all duration-200"
+                    className={`border-b border-gray-200 hover:bg-blue-50 cursor-pointer transition-all duration-200 ${
+                      index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+                    }`}
                   >
-                    <td className="py-4 px-6 font-medium text-blue-600">{claim.id}</td>
-                    <td className="py-4 px-6">{claim.distributor}</td>
-                    <td className="py-4 px-6 font-mono text-sm">{claim.ndc}</td>
-                    <td className="py-4 px-6">{claim.reason}</td>
-                    <td className="py-4 px-6 font-semibold">{claim.amount}</td>
-                    <td className="py-4 px-6">
-                      <Badge className={`${getStatusColor(claim.status)} rounded-full`}>
+                    <td className="py-5 px-6 font-bold text-blue-700 text-base">{claim.id}</td>
+                    <td className="py-5 px-6 font-medium text-gray-800 text-base">{claim.distributor}</td>
+                    <td className="py-5 px-6 font-mono text-blue-600 text-base font-medium">{claim.ndc}</td>
+                    <td className="py-5 px-6 text-gray-700 text-base">{claim.reason}</td>
+                    <td className="py-5 px-6 font-bold text-green-700 text-base">{claim.amount}</td>
+                    <td className="py-5 px-6">
+                      <Badge className={`${getStatusColor(claim.status)} text-sm px-4 py-2 rounded-full font-medium`}>
                         {claim.status}
                       </Badge>
                     </td>
-                    <td className={`py-4 px-6 ${getAgeColor(claim.age)}`}>
+                    <td className={`py-5 px-6 text-base font-medium ${getAgeColor(claim.age)}`}>
                       {claim.age}
                     </td>
                   </tr>
